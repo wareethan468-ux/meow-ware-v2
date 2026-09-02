@@ -17,12 +17,14 @@ import ScraperView from './views/ScraperView';
 import ProxySettingsView from './views/ProxySettingsView';
 import ProxyTrafficView from './views/ProxyTrafficView';
 import ExecutorView from './views/ExecutorView';
+import MonitorView from './views/MonitorView';
+import RobloxMonitorStrip from './components/RobloxMonitorStrip';
 import Modal from './components/Modal';
 import { Icon } from './components/Icons';
 import { callDesktop, hasDesktopApi } from './lib/desktopApi';
 import { applyTheme, cacheTheme, loadCachedTheme } from './lib/theme';
 
-const views = { flags: FlagsView, presets: PresetsView, console: ConsoleView, settings: SettingsView, offsets: OffsetsView, sources: SourcesView, themes: ThemesView, assetProxy: AssetProxyView, scraper: ScraperView, proxyTraffic: ProxyTrafficView, proxyThemes: ThemesView, proxySettings: ProxySettingsView, executor: ExecutorView };
+const views = { flags: FlagsView, presets: PresetsView, monitor: MonitorView, console: ConsoleView, settings: SettingsView, offsets: OffsetsView, sources: SourcesView, themes: ThemesView, assetProxy: AssetProxyView, scraper: ScraperView, proxyTraffic: ProxyTrafficView, proxyThemes: ThemesView, proxySettings: ProxySettingsView, executor: ExecutorView };
 
 import ResizeHandles from './components/ResizeHandles';
 import KeyVerificationModal from './components/KeyVerificationModal';
@@ -40,6 +42,7 @@ export default function App() {
   const [termsModalOpen, setTermsModalOpen] = useState(false);
   const [proxyAdminPrompt, setProxyAdminPrompt] = useState(false);
   const [capabilities, setCapabilities] = useState({});
+  const [monitor, setMonitor] = useState({ running: false, cpu_percent: 0, memory_label: '0 MB' });
   const notifTimer = useRef();
   const exitTimer = useRef();
 
@@ -51,6 +54,17 @@ export default function App() {
     if (hasDesktopApi()) loadCapabilities();
     else window.addEventListener('pywebviewready', loadCapabilities, { once: true });
     return () => window.removeEventListener('pywebviewready', loadCapabilities);
+  }, []);
+
+  useEffect(() => {
+    const refreshMonitor = async () => {
+      if (!hasDesktopApi()) return;
+      const value = await callDesktop('get_monitor_status');
+      if (value) setMonitor(value);
+    };
+    refreshMonitor();
+    const timer = window.setInterval(refreshMonitor, 2000);
+    return () => window.clearInterval(timer);
   }, []);
 
   const dismissNotification = useCallback(() => {
@@ -192,8 +206,9 @@ export default function App() {
       <ResizeHandles />
       <section className="app-window" aria-label="Vellium FastFlag Injector">
         <TitleBar />
+        {product === 'injector' && <RobloxMonitorStrip status={monitor} onOpen={() => setActiveView('monitor')} />}
         <div className="workspace-shell">
-          <div className="content"><View flags={flags} refreshFlags={refreshFlags} notify={notify} onNavigate={setActiveView} product={product} proxyMode={product === 'proxy'} /></div>
+          <div className="content"><View flags={flags} refreshFlags={refreshFlags} notify={notify} onNavigate={setActiveView} monitor={monitor} product={product} proxyMode={product === 'proxy'} /></div>
           <TerminalDrawer open={terminalOpen} onClose={() => setTerminalOpen(false)} />
         </div>
         <BottomNavBar activeView={activeView} onChange={setActiveView} product={product} capabilities={capabilities} onProductChange={async(next) => { if(next !== 'injector' && capabilities[next] === false){notify({title:'Only available on Windows',message:`${next === 'proxy' ? 'Vellium Proxy' : 'Vellium Executor'} is not available on macOS. FastFlag Injector remains available.`,type:'error'});return} setProduct(next); setActiveView(next === 'proxy' ? 'assetProxy' : next === 'executor' ? 'executor' : 'flags'); if(next === 'proxy'&&!sessionStorage.getItem('vellium.adminPrompted')){const result=await callDesktop('get_proxy_settings');if(result&&!result.is_admin&&result.settings?.run_as_admin){sessionStorage.setItem('vellium.adminPrompted','1');setProxyAdminPrompt(true)}} }} terminalOpen={terminalOpen} onToggleTerminal={() => setTerminalOpen(value => !value)} />

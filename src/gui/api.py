@@ -3936,6 +3936,69 @@ class Api(ExecutorMixin):
             'maximized': getattr(self, '_maximized', False),
         }
 
+    def get_monitor_status(self):
+        """Return a compact, cross-platform Roblox process health snapshot."""
+        result = {
+            'running': False, 'attached': False, 'pid': 0, 'cpu_percent': 0.0,
+            'memory_bytes': 0, 'memory_label': '0 MB', 'priority': '—',
+            'version': None, 'offsets_version': None, 'offset_count': 0,
+            'offsets_ok': False, 'session_seconds': 0,
+        }
+        rm = self.roblox_manager
+        fm = self.flag_manager
+        pids = rm.list_roblox_processes() if rm else []
+        pid = int(rm.pid or 0) if rm and rm.is_attached else (int(pids[0]) if pids else 0)
+        result.update(running=bool(pid), attached=bool(rm and rm.is_attached), pid=pid)
+
+        if pid:
+            try:
+                import psutil
+                proc = psutil.Process(pid)
+                cpu = proc.cpu_percent(interval=None)
+                memory = int(proc.memory_info().rss)
+                try:
+                    priority = str(proc.nice())
+                    if sys.platform == 'win32':
+                        priority = {
+                            psutil.IDLE_PRIORITY_CLASS: 'Low',
+                            psutil.BELOW_NORMAL_PRIORITY_CLASS: 'Below normal',
+                            psutil.NORMAL_PRIORITY_CLASS: 'Normal',
+                            psutil.ABOVE_NORMAL_PRIORITY_CLASS: 'Above normal',
+                            psutil.HIGH_PRIORITY_CLASS: 'High',
+                            psutil.REALTIME_PRIORITY_CLASS: 'Realtime',
+                        }.get(proc.nice(), priority)
+                except (psutil.AccessDenied, AttributeError):
+                    priority = 'Unavailable'
+                result.update(
+                    cpu_percent=round(float(cpu), 1), memory_bytes=memory,
+                    memory_label=f'{memory / (1024 ** 3):.2f} GB' if memory >= 1024 ** 3 else f'{memory / (1024 ** 2):.0f} MB',
+                    priority=priority,
+                )
+            except Exception:
+                pass
+            try:
+                from src.utils.roblox_account import get_session_duration
+                result['session_seconds'] = int(get_session_duration(pid))
+            except Exception:
+                pass
+
+        try:
+            from src.core.roblox_manager import RobloxManager
+            result['version'] = RobloxManager.get_roblox_version_string()
+        except Exception:
+            pass
+        try:
+            from src.core import offset_loader
+            result['offsets_version'] = offset_loader.last_source_build()
+        except Exception:
+            pass
+        if fm:
+            result['offset_count'] = len(fm.preset_flags_list)
+            result['offsets_ok'] = bool(fm.offsets_loaded and result['offsets_version'])
+            if result['version'] and result['offsets_version']:
+                result['offsets_ok'] = result['version'] == result['offsets_version']
+        return result
+
     def get_attachment_targets(self):
         """Return selectable Roblox processes and the current attachment."""
         rm = self.roblox_manager

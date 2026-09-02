@@ -5,6 +5,7 @@ import AttachmentStatus from './AttachmentStatus';
 const navItems = [
   { id: 'flags', icon: 'layers', label: 'Flags' },
   { id: 'presets', icon: 'list', label: 'Presets' },
+  { id: 'monitor', icon: 'activity', label: 'Monitor' },
   { id: 'console', icon: 'terminal', label: 'Console' },
   { id: 'offsets', icon: 'refresh', label: 'Offsets' },
   { id: 'sources', icon: 'copy', label: 'Sources' },
