@@ -1,188 +1,128 @@
 <div align="center">
-  <img src="logo.svg" alt="Roblox FastFlag Manager" width="600">
+  <img src="logo.svg" alt="Vellium Tweaker" width="560">
+  <h1>Meow Ware V2 · Vellium Tweaker</h1>
+  <p>A desktop workspace for managing Roblox FastFlags, presets, sources, and supported companion tools.</p>
+
+  ![Windows](https://img.shields.io/badge/Windows-10%20%2F%2011-111111?logo=windows11)
+  ![macOS](https://img.shields.io/badge/macOS-FastFlags%20only-111111?logo=apple)
+  ![React](https://img.shields.io/badge/UI-React-111111?logo=react)
+  ![Python](https://img.shields.io/badge/Desktop-Python-111111?logo=python)
 </div>
 
-<div align="center">
+## The product
 
-![Version](https://img.shields.io/badge/version-v4.2.0-blue.svg)
-[![Discord][shield-discord-server]][discord-invite]
-![Platform](https://img.shields.io/badge/platform-Windows-white.svg)
-![Modifiable FFlags](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2F4anti%2FRoblox-Fastflag-Manager%2Fmain%2Fbadges%2Ffflags.json)
+Vellium Tweaker brings the project's tools into one consistent desktop interface. The primary product is the FastFlag Injector: search known flags, create a configuration, organize presets, and write the result to Roblox's `ClientAppSettings.json`.
 
-</div>
+On Windows, the app also exposes Vellium Proxy for local asset-replacement profiles. The script editor is Windows-only. On macOS, the application stays in FastFlag mode and clearly marks Windows-only products as unavailable.
 
-<div align="center">
-  <b>A lightweight, open-source, high-performance FastFlag Manager giving you complete control over Roblox FastFlags.</b><br>
-  Optimized for everything from high-end to low-end hardware.
-</div>
+![FastFlag configuration workspace](docs/screenshots/fastflag-editor.png)
 
-<br>
+## Features
 
-<div align="center">
-  <img src="https://i.ibb.co/JRQF7LzY/Menu-Picture-Normal-just-the-starting.png" alt="Roblox FastFlag Manager Main Interface" width="800">
-</div>
+- Search and browse the bundled FastFlag catalog.
+- Add boolean, integer, float, and string flags.
+- Import, export, reorder, and reuse configurations as presets.
+- Apply configurations through `ClientAppSettings.json`.
+- Manage FastFlag definition sources and use the bundled offline fallback.
+- Customize the interface with themes and local appearance settings.
+- Build a native Windows executable or macOS application bundle.
+- Use local asset-replacement profiles through Vellium Proxy on Windows.
 
----
+## Product views
 
-## 📑 Table of Contents
+### FastFlag Injector
 
-- [✨ Showcase](#showcase)
-- [✨ Key Features](#key-features)
-- [🌿 Supported Bootstrappers](#variants)
-- [📥 Installation](#installation)
-- [🎮 How to Use](#how-to-use)
-- [💬 Discord Server](#community--support)
-- [⭐ Star History](#star-history)
-- [⚖️ License](#license)
+The main workspace combines catalog search, editable values, imports and exports, preset management, source syncing, and Roblox launch controls. Windows supports the full integration. macOS uses the file-based `ClientAppSettings.json` path without Windows process-memory features.
 
----
+### Vellium Proxy · Windows only
 
-<div>
+Create profiles that map Roblox asset identifiers to local replacements, inspect saved mappings, and synchronize an active profile with the local proxy runtime.
 
-## <a name="showcase"></a>✨ Showcase
+![Vellium Proxy asset replacements](docs/screenshots/asset-proxy.png)
 
-</div>
+### Script editor · Windows only
 
-<details open>
-  <summary><b>View Features in Action</b></summary>
-  <br>
-  <div>
-    <table border="0">
-      <tr>
-        <td valign="top">
-          <img src="https://i.ibb.co/CNKnS9b/Menu-pic-2-with-white-matrix-theme.png" alt="Matrix Theme" width="450"><br>
-          <b>🎨 Dynamic Themes</b><br>
-          <i>Personalize your experience with themes like White Matrix.</i>
-        </td>
-        <td valign="top">
-          <img src="https://i.ibb.co/XkJtMs8r/right-click-menu-pic.png" alt="Context Menu" width="450"><br>
-          <b>⚡ Advanced Controls</b><br>
-          <i>Powerful right-click menus for rapid flag management and offsets.</i>
-        </td>
-      </tr>
-    </table>
-  </div>
-</details>
+The Windows build includes a focused Lua editor surface with connection state, line numbers, keyboard shortcuts, and an output panel.
 
----
+![Windows script editor](docs/screenshots/script-editor.png)
 
-<div>
+## Platform support
 
-## <a name="key-features"></a>✨ Key Features
+| Capability | Windows 10/11 | macOS |
+|---|:---:|:---:|
+| FastFlag catalog and editor | ✅ | ✅ |
+| Presets, imports, and exports | ✅ | ✅ |
+| `ClientAppSettings.json` application | ✅ | ✅ |
+| Themes and local settings | ✅ | ✅ |
+| Live Windows offset features | ✅ | — |
+| Vellium Proxy | ✅ | — |
+| Script editor integration | ✅ | — |
 
-| | Feature | Description |
-|:---:|:---|:---|
-| ⛑️ | **Bloxstrap & Variants Support** | Interfaces with multiple bootstrappers simultaneously |
-| ⚡ | **Instant Indexing** | Search through thousands of FFlags in milliseconds |
-| 🛠️ | **Smart Presets** | Create, merge, and toggle complex configurations instantly |
-| 🧩 | **Bindable FastFlags** | Assign keybinds to toggle or cycle specific FastFlags |
-| 🛰️ | **Update Proof** | Automated code and FFlag offset updates |
-| ☘️ | **Manual / Auto Updates** | Switch between auto and manual update control |
-| 🎨 | **Rich UI Themes** | Beautiful aesthetic themes for a seamless experience |
-| 🔒 | **Secure & Undetectable** | Reliable, trace-free deployment pipeline with stealth |
-| 📦 | **Standalone Installer** | Pre-compiled Windows executable, no Python required |
+The macOS build searches for Roblox at `/Applications/Roblox.app` and `~/Applications/Roblox.app`. Application settings are stored under `~/Library/Application Support/MeowWare`.
 
-</div>
+## Run from source
 
----
+Prerequisites:
 
-<div>
-
-## <a name="variants"></a>🌿 Supported Bootstrappers
-
-| Variant | Supported |
-| :--- | :---: |
-| **Bloxstrap** | ✅ |
-| **Voidstrap** | ✅ |
-| **Fishstrap** | ✅ |
-| **Others** | ✅ |
-
-</div>
-
----
-
-<div>
-
-## <a name="installation"></a>📥 Installation
-
-### <a name="windows-installer"></a>Windows Installer (Recommended)
-
-1. Navigate to the **[Releases](../../releases)** page of this repository.
-2. Download the latest `FFM_Installer.exe`.
-3. Run the executable and follow the setup instructions.
-4. Launch the application from the Start menu.
-
-</div>
-
-<div>
-
-### <a name="build-from-source"></a>Building from Source (For Developers)
-
-**Prerequisites:** [Python 3.10+](https://www.python.org/downloads/) · [Git](https://git-scm.com/downloads) · [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) *(Desktop development with C++ workload)*
-
-</div>
+- Python 3.13
+- Node.js 22 or newer
+- npm
 
 ```bash
-git clone https://github.com/4anti/Roblox-Fastflag-Manager.git
-cd Roblox-Fastflag-Manager
-pip install -r requirements.txt
+git clone https://github.com/wareethan468-ux/meow-ware-v2.git
+cd meow-ware-v2
+npm ci
+npm run build
+python -m pip install -r requirements.txt
 python main.pyw
 ```
 
----
+## Build for Windows
 
-<div>
+Run this on a 64-bit Windows 10 or Windows 11 computer:
 
-## <a name="how-to-use"></a>🎮 How to Use
+```powershell
+python build_exe.py
+```
 
-| Step | Action | Description |
-| :---: | :--- | :--- |
-| 1 | **Search** | Use the search bar to find specific FFlags or browse by category |
-| 2 | **Presets** | Drag and drop presets, reorder them, and share them |
-| 3 | **Keybinds** | Assign hotkeys to toggle specific flags or presets instantly while in-game |
-| 4 | **Apply** | Click the *Apply* button to inject settings into your Roblox client |
+The standalone executable is written to `dist/VelliumTweaker.exe`. The build script automatically selects Python 3.13 when a newer Python version is currently active.
 
-</div>
+## Build for macOS
 
----
+PyInstaller cannot cross-compile a macOS application from Windows. Run the build on a Mac:
 
-<div>
+```bash
+python3 build_macos.py
+```
 
-## <a name="community--support"></a>💬 Discord Community & Support
+The resulting application is written to `dist-macos/Vellium Tweaker.app`. The included `Build macOS app` GitHub Actions workflow can also generate a downloadable zipped application bundle from a macOS runner.
 
-Join the official Discord for support, preset sharing, and community discussion.
+## Configuration
 
-[**Join the Discord Server →**](https://discord.gg/ECekjAkQu7)
+The desktop app stores user settings outside the repository:
 
-</div>
+- Windows: `%LOCALAPPDATA%\MeowWare`
+- macOS: `~/Library/Application Support/MeowWare`
 
----
+The Discord bot requires `DISCORD_TOKEN` and `SUPABASE_SECRET_KEY` environment variables. The desktop license client uses a Supabase publishable key; never place a Supabase secret/service-role key or Discord token in source control.
 
-<div>
+## Repository layout
 
-## <a name="star-history"></a>⭐ Star History
+```text
+web/                 React desktop interface
+src/core/            FastFlag, Roblox, preset, and source logic
+src/gui/             pywebview desktop bridge
+src/data/            bundled fallback flag definitions
+website/             product website
+bot/                 optional Discord bot
+build_exe.py          Windows standalone build
+build_macos.py        macOS application build
+```
 
-<a href="https://www.star-history.com/?repos=4anti%2FRoblox-Fastflag-Manager&type=timeline&legend=bottom-right">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=4anti/Roblox-Fastflag-Manager&type=timeline&theme=dark&legend=bottom-right&sealed_token=xgPKRazom_r-a2oO6wMpovaLVDfDLRzznnKRijber25QM5NzfXkYf3pYCOA-m92NejtEHnjsxDz-ZNMbWpDqh9m2LSDjIPWI7V6pgFoeF0piPiXBliMQSznMHFjR85MitR4ELoY7UyYbXJlX9zFYICBjJoLnmNxiAGaHffNQKF-vy1Y3m8hExJePUx99" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=4anti/Roblox-Fastflag-Manager&type=timeline&legend=bottom-right&sealed_token=xgPKRazom_r-a2oO6wMpovaLVDfDLRzznnKRijber25QM5NzfXkYf3pYCOA-m92NejtEHnjsxDz-ZNMbWpDqh9m2LSDjIPWI7V6pgFoeF0piPiXBliMQSznMHFjR85MitR4ELoY7UyYbXJlX9zFYICBjJoLnmNxiAGaHffNQKF-vy1Y3m8hExJePUx99" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=4anti/Roblox-Fastflag-Manager&type=timeline&legend=bottom-right&sealed_token=xgPKRazom_r-a2oO6wMpovaLVDfDLRzznnKRijber25QM5NzfXkYf3pYCOA-m92NejtEHnjsxDz-ZNMbWpDqh9m2LSDjIPWI7V6pgFoeF0piPiXBliMQSznMHFjR85MitR4ELoY7UyYbXJlX9zFYICBjJoLnmNxiAGaHffNQKF-vy1Y3m8hExJePUx99" />
- </picture>
-</a>
+## Safety and account responsibility
 
----
+FastFlags are internal Roblox configuration switches and can change or stop working without notice. Back up configurations, avoid unknown flags, and follow Roblox's terms and applicable platform rules. This project is not affiliated with or endorsed by Roblox Corporation.
 
-<div>
+## License
 
-## <a name="license"></a>⚖️ License
-
-This project is licensed under the **PolyForm Noncommercial License 1.0.0**. Noncommercial use only — see [`LICENSE`](LICENSE) for the full terms.
-
----
-
-*Developed by **4anti** with ❤️ for the Roblox community.*
-
-</div>
-
-[shield-discord-server]: https://img.shields.io/discord/1487010055931953152?logo=discord&logoColor=white&label=discord&color=aaaaa
-[discord-invite]:  https://discord.gg/HnqyxsAXhz
+Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE). Commercial use is not permitted by that license.
