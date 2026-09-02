@@ -1,0 +1,95 @@
+name: Build Vellium Tweaker
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    name: Windows executable
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Build React interface
+        shell: pwsh
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build standalone executable
+        shell: pwsh
+        run: python build_exe.py
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vellium-Tweaker-Windows
+          path: dist/VelliumTweaker.exe
+          if-no-files-found: error
+          retention-days: 14
+
+  macos:
+    name: macOS application
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Build application bundle
+        run: python build_macos.py
+
+      - name: Archive application bundle
+        run: >-
+          ditto -c -k --sequesterRsrc --keepParent
+          "dist-macos/Vellium Tweaker.app"
+          "dist-macos/Vellium-Tweaker-macOS.zip"
+
+      - name: Upload macOS build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vellium-Tweaker-macOS
+          path: dist-macos/Vellium-Tweaker-macOS.zip
+          if-no-files-found: error
+          retention-days: 14

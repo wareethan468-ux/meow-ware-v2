@@ -95,7 +95,11 @@ PyInstaller cannot cross-compile a macOS application from Windows. Run the build
 python3 build_macos.py
 ```
 
-The resulting application is written to `dist-macos/Vellium Tweaker.app`. The included `Build macOS app` GitHub Actions workflow can also generate a downloadable zipped application bundle from a macOS runner.
+The resulting application is written to `dist-macos/Vellium Tweaker.app`.
+
+## Automatic GitHub builds
+
+The `Build Vellium Tweaker` GitHub Actions workflow runs automatically for every push and pull request targeting `main`. It builds both platforms in parallel and uploads `Vellium-Tweaker-Windows` and `Vellium-Tweaker-macOS` under the workflow run's **Artifacts** section. It can also be started manually from the repository's **Actions** tab.
 
 ## Configuration
 
