@@ -80,11 +80,21 @@ jobs:
       - name: Build application bundle
         run: python build_macos.py
 
+      - name: Sign and validate application bundle
+        run: |
+          codesign --force --deep --sign - "dist-macos/Vellium Tweaker.app"
+          codesign --verify --deep --strict --verbose=2 "dist-macos/Vellium Tweaker.app"
+          "dist-macos/Vellium Tweaker.app/Contents/MacOS/Vellium Tweaker" --self-test
+
+      - name: Add macOS opener
+        run: |
+          cp "macos/Open Vellium Tweaker.command" "dist-macos/Open Vellium Tweaker.command"
+          chmod +x "dist-macos/Open Vellium Tweaker.command"
+
       - name: Archive application bundle
-        run: >-
-          ditto -c -k --sequesterRsrc --keepParent
-          "dist-macos/Vellium Tweaker.app"
-          "dist-macos/Vellium-Tweaker-macOS.zip"
+        run: |
+          cd dist-macos
+          zip -qry "Vellium-Tweaker-macOS.zip" "Vellium Tweaker.app" "Open Vellium Tweaker.command"
 
       - name: Upload macOS build
         uses: actions/upload-artifact@v4
