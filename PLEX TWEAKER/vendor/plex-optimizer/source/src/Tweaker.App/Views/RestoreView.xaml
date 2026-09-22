@@ -1,0 +1,64 @@
+<UserControl x:Class="Tweaker.App.Views.RestoreView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Tweaker.App.Views">
+  <!-- Two things you can put back, side by side, in one panel. No badges: the state is a sentence. -->
+  <ScrollViewer Style="{StaticResource DarkScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="40,14,40,26" local:Entrance.ReduceMotion="{Binding ReduceMotion}">
+      <TextBlock Text="Restore" FontFamily="Segoe UI Variable Display" FontSize="28" FontWeight="SemiBold"/>
+      <TextBlock Text="Nothing is resumed automatically." Style="{StaticResource PageSubtitleStyle}" Margin="0,4,0,0"/>
+
+      <Border Style="{StaticResource GlassPanelStyle}" Margin="0,18,0,0" local:Entrance.Order="0">
+        <Grid>
+          <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="1"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+
+          <StackPanel Margin="0,0,26,0">
+            <TextBlock Text="Latest recorded session" FontFamily="Segoe UI Variable Display" FontSize="17" FontWeight="SemiBold"/>
+            <TextBlock Text="Puts the last run back to its recorded values." Style="{StaticResource BodyMutedStyle}" Margin="0,6,0,0"/>
+            <TextBlock Margin="0,14,0,0" FontSize="13" FontWeight="SemiBold">
+              <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                  <Setter Property="Text" Value="No session recorded yet"/>
+                  <Setter Property="Foreground" Value="{StaticResource Ink45Brush}"/>
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding Restore.HasRestorableSession}" Value="True">
+                      <Setter Property="Text" Value="A session is ready to restore"/>
+                      <Setter Property="Foreground" Value="{StaticResource StatusSuccessBrush}"/>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
+            </TextBlock>
+            <Button Content="Restore latest session" Command="{Binding Restore.RestoreLatestCommand}" IsEnabled="{Binding Restore.HasRestorableSession}"
+                    Style="{StaticResource GhostPillStyle}" HorizontalAlignment="Left" Margin="0,14,0,0" Padding="18,0"/>
+            <TextBlock Text="{Binding Restore.Status}" Style="{StaticResource RowMetaStyle}" Margin="0,14,0,0" TextWrapping="Wrap"/>
+          </StackPanel>
+
+          <Border Grid.Column="1" Background="{StaticResource GlassEdgeBrush}"/>
+
+          <StackPanel Grid.Column="2" Margin="26,0,0,0">
+            <TextBlock Text="Interrupted session" FontFamily="Segoe UI Variable Display" FontSize="17" FontWeight="SemiBold"/>
+            <TextBlock Text="Recovers a run that did not finish." Style="{StaticResource BodyMutedStyle}" Margin="0,6,0,0"/>
+            <TextBlock Margin="0,14,0,0" FontSize="13" FontWeight="SemiBold">
+              <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                  <Setter Property="Text" Value="Nothing was interrupted"/>
+                  <Setter Property="Foreground" Value="{StaticResource Ink45Brush}"/>
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding Recovery.HasIncompleteTransaction}" Value="True">
+                      <Setter Property="Text" Value="A run was interrupted and needs recovery"/>
+                      <Setter Property="Foreground" Value="{StaticResource GoldGlowBrush}"/>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
+            </TextBlock>
+            <Button Content="Restore interrupted session" Command="{Binding Recovery.RollbackCommand}" IsEnabled="{Binding Recovery.HasIncompleteTransaction}"
+                    Style="{StaticResource GhostPillStyle}" HorizontalAlignment="Left" Margin="0,14,0,0" Padding="18,0"/>
+            <TextBlock Text="{Binding Recovery.Message}" Style="{StaticResource RowMetaStyle}" Margin="0,14,0,0" TextWrapping="Wrap"/>
+          </StackPanel>
+        </Grid>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

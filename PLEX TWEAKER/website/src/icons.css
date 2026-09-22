@@ -1,0 +1,9 @@
+.brand > span svg,
+.feature-grid article > span svg { display: block; }
+.mock-nav button { display: flex; align-items: center; gap: 5px; }
+.mock-search,
+.trust span { display: flex; align-items: center; gap: 7px; }
+.trust svg { color: #9d7ce4; flex: 0 0 auto; }
+.button svg,
+.nav-download svg { flex: 0 0 auto; }
+.faq button b { display: grid; place-items: center; }

@@ -1,0 +1,67 @@
+<UserControl x:Class="Tweaker.App.Views.AboutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Tweaker.App.Views">
+  <UserControl.Resources>
+    <Style x:Key="AboutHeadingStyle" TargetType="TextBlock">
+      <Setter Property="FontFamily" Value="Segoe UI Variable Display"/>
+      <Setter Property="FontSize" Value="17"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+    </Style>
+    <Style x:Key="AboutLineStyle" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="13.5"/>
+      <Setter Property="Foreground" Value="#D9FFFFFF"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="LineHeight" Value="20"/>
+      <Setter Property="Margin" Value="0,6,0,0"/>
+    </Style>
+    <Style x:Key="AboutMutedStyle" TargetType="TextBlock" BasedOn="{StaticResource AboutLineStyle}">
+      <Setter Property="Foreground" Value="{StaticResource Ink60Brush}"/>
+    </Style>
+  </UserControl.Resources>
+
+  <!-- One panel, plain text. Reads top to bottom: what the profiles do, what the app refuses, where the changes stand. -->
+  <ScrollViewer Style="{StaticResource DarkScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="40,14,40,26" local:Entrance.ReduceMotion="{Binding ReduceMotion}">
+      <TextBlock Text="About the tweaks" FontFamily="Segoe UI Variable Display" FontSize="28" FontWeight="SemiBold"/>
+      <TextBlock Text="What the profiles do, and what this app will not do." Style="{StaticResource PageSubtitleStyle}" Margin="0,4,0,0"/>
+
+      <Border Style="{StaticResource GlassPanelStyle}" Margin="0,18,0,0" local:Entrance.Order="0">
+        <StackPanel>
+          <TextBlock Text="Game profiles" Style="{StaticResource AboutHeadingStyle}"/>
+          <TextBlock Style="{StaticResource AboutMutedStyle}" Text="Applied from the Games page. Each step keeps what the milder one wrote and adds to it."/>
+          <Grid Margin="0,12,0,0">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="32"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <StackPanel>
+              <TextBlock Text="Mega FPS" FontWeight="SemiBold" FontSize="14"/>
+              <TextBlock Style="{StaticResource AboutLineStyle}" Text="Frames over looks, image still readable. Blurry textures with no filtering, reduced foliage and post-processing, softer internal 3D rendering."/>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+              <TextBlock Text="Ultra Potato" FontWeight="SemiBold" FontSize="14"/>
+              <TextBlock Style="{StaticResource AboutLineStyle}" Text="The most frames this app can buy you. The lowest quality the game allows, nameplates, overlays and counters off, no antialiasing, filtering or ambient occlusion, laptop frame caps and G-SYNC off."/>
+            </StackPanel>
+          </Grid>
+          <TextBlock Style="{StaticResource AboutLineStyle}" Foreground="{StaticResource GoldGlowBrush}" Margin="0,12,0,0"
+                     Text="Your monitor resolution is never changed. Undo restores every value; Reset puts the driver profile back to how it was before this app first touched it."/>
+
+          <Border Height="1" Background="{StaticResource GlassEdgeBrush}" Margin="0,22,0,22"/>
+
+          <TextBlock Text="What this app will not do" Style="{StaticResource AboutHeadingStyle}"/>
+          <TextBlock Style="{StaticResource AboutMutedStyle}" Text="Deliberate limits, not missing features."/>
+          <TextBlock Style="{StaticResource AboutLineStyle}" Margin="0,12,0,0" Text="Disable Defender, exploit mitigations, Windows Update or anti-cheat components. Real safety traded for no measured frames."/>
+          <TextBlock Style="{StaticResource AboutLineStyle}" Text="Overclock or change voltages. Hardware-specific and not reversible by us."/>
+          <TextBlock Style="{StaticResource AboutLineStyle}" Text="Write undocumented GPU values. Drivers ignore them and the effect cannot be checked. Driver settings go through NVIDIA, AMD and Intel's own interfaces, nothing else."/>
+          <TextBlock Style="{StaticResource AboutLineStyle}" Text="Change your display resolution, in Windows or in a game."/>
+
+          <Border Height="1" Background="{StaticResource GlassEdgeBrush}" Margin="0,22,0,22"/>
+
+          <TextBlock Text="Every change is on record" Style="{StaticResource AboutHeadingStyle}"/>
+          <TextBlock Style="{StaticResource AboutLineStyle}" Margin="0,12,0,0">
+            <Run Text="{Binding Optimization.SelectedEffectCount, Mode=OneWay}" FontWeight="SemiBold" Foreground="White"/><Run Text=" changes across seven groups. Each one is recorded before it is written and checked after, so a run can be undone. Anything that could not be made safe was left out, and each omission is written down."/>
+          </TextBlock>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
